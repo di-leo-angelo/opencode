@@ -1254,7 +1254,7 @@ it.effect("a summary capped for the window is retried when the provider reports 
     )
     expect(yield* fixture.run({ ...fixture.context, model: narrow })).toEqual({ status: "completed" })
     expect(requests).toHaveLength(2)
-    expect(requests[0].generation?.maxTokens).toBe(3_000)
+    expect(requests[0].maxTokens).toBe(3_000)
   }),
 )
 
@@ -1275,7 +1275,7 @@ it.effect("a summary capped for the window is retried when the reported usage st
     )
     expect(yield* fixture.run({ ...fixture.context, model: narrow })).toEqual({ status: "completed" })
     expect(requests).toHaveLength(2)
-    expect(requests[0].generation?.maxTokens).toBe(3_000)
+    expect(requests[0].maxTokens).toBe(3_000)
   }),
 )
 
@@ -1679,7 +1679,7 @@ it.effect("compaction summarizes as usual when the held background summary stops
   Effect.gen(function* () {
     requests = []
     const bus = yield* Bus.Service
-    const compaction = yield* enablePrecompute
+    const compaction = yield* SessionCompaction.Service
     const session = yield* insertSession(Session.ID.make("ses_precompute_length"))
     const history = precomputeHistory()
     reply = (_request, attempt) =>

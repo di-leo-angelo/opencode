@@ -533,7 +533,7 @@ export const layer = Layer.effect(
       // template gets one reminder before it counts as a failure.
       // Compare the window room for the request's own estimate, not the cap: the cap also reflects budget cuts.
       const windowSized = (request: LLMRequest, size?: Estimate) =>
-        request.generation?.maxTokens !== undefined &&
+        request.maxTokens !== undefined &&
         SessionModelRequest.outputLimit(
           context.model.limit,
           size ?? { measured: 0, estimated: estimateRequest(request) },
@@ -562,7 +562,7 @@ export const layer = Layer.effect(
             blank
               ? fail(
                   { type: "compaction.failed", message: "Compaction produced no summary" },
-                  limitKind(retry.usage, context.model.limit, nudged.generation?.maxTokens, windowSized(nudged, nudgedSize)),
+                  limitKind(retry.usage, context.model.limit, nudged.maxTokens, windowSized(nudged, nudgedSize)),
                 )
               : fail({ type: "compaction.failed", message: "Compaction summary did not match the required template" }),
           )
@@ -887,7 +887,7 @@ export const layer = Layer.effect(
                 return Effect.fail(
                   fail(
                     { type: "compaction.failed", message: "Compaction summary reached the output token limit" },
-                    limitKind(streamed.usage, context.model.limit, request.generation?.maxTokens, windowSized),
+                    limitKind(streamed.usage, context.model.limit, request.maxTokens, windowSized),
                   ),
                 )
               case "content-filter":
